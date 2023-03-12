@@ -1,11 +1,25 @@
 package dao;
 
 import dto.Language;
+import util.DB;
 
-public class LanguageDAOImpl implements LanguageDAO{
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+public class LanguageDAOImpl implements LanguageDAO {
     @Override
     public int create(Language language) {
-        return 0;
+        int result;
+        try(Connection connection = DB.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO ls_lang VALUES (?, ?)");
+            statement.setObject(1, language.getId());
+            statement.setString(2, language.getName());
+            result = statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return result;
     }
 
     @Override
